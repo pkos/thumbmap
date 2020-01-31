@@ -17,7 +17,7 @@ my @lineslplcrc32 = "";
 #check command line
 foreach my $argument (@ARGV) {
   if ($argument =~ /\Q$substringh\E/) {
-    print "thumbmap v0.5 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
+    print "thumbmap v0.6 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
 	print "                and renames your downloaded thumbnail images to match your playlist game names\n";
 	print "\n";
 	print "with thumbmap [lpl file ...] [system]";
@@ -64,7 +64,6 @@ LOOP: while (my $readline = <FILE>) {
     #print "$templine[0] " . "$templine[1] " . "$templine[2]";
 	push(@linesmapsystem, $templine[0]);
     push(@linesmapgame, $templine[1]);
-    #$templine[2] =~ s/[\x0A\x0D]//g;
 	push(@linesmapcrc32, $templine[2]);
     next LOOP;  
   }
@@ -129,7 +128,7 @@ my $newfile = "";
 my $max = scalar(@lineslplcrc32);
 my $progress = Term::ProgressBar->new({name => 'progress', count => $max});
 
-open(LOG, ">", "log.txt") or die "Could not open log.txt\n";
+open(LOG, ">", "log_" . "$system" . ".txt") or die "Could not open log.txt\n";
 OUTER: foreach my $checklpl (@lineslplcrc32) {
   $progress->update($_);
   #print "$checklpl\n";
@@ -137,7 +136,7 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
   INNER: foreach my $checkmap (@linesmapcrc32) {
      $j++;
 	 #print "$checkmap\n";
-     if (uc $checkmap eq uc $checklpl and $checklpl ne "") {
+     if (uc "$checkmap" eq uc "$checklpl" and "$checklpl" ne "") {
 	   #we have a match and the proper lpl and map game names to start renaming
 	   #print "match: " . "$checklpl " . "$checkmap " . "$lineslplgame[$i] " . "$linesmapgame[$j]\n";
 	   
@@ -145,30 +144,54 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
 	   $originalfile = "$thumbpath" . "/" . "Named_Boxarts/" . "$linesmapgame[$j].png";
 	   $newfile = "$thumbpath" . "/" . "Named_Boxarts/" . "$lineslplgame[$i].png";
 	   #print "$originalfile " . "$newfile\n";
-	   if (rename $originalfile, $newfile) {
-	     print LOG "Renamed boxart png file: ". "$originalfile " . "$newfile\n";
+	   if ($originalfile ne $newfile) {
+	     if (rename $originalfile, $newfile) {
+	       print LOG "Renamed boxart png file: ". "$originalfile " . "$newfile\n";
+	     } else {
+	       if (-e $newfile) {
+		     print LOG "Already exists boxart png image: $newfile\n";
+		   } else {
+	   	     print LOG "Missing boxart png image: $originalfile\n";
+	       }
+	     }
 	   } else {
-	   	 print LOG "Missing boxart png image: $originalfile\n";
+	     print LOG "Already exists boxart png image: $newfile\n";
 	   }
 	   
 	   #second snaps 
 	   $originalfile = "$thumbpath" . "/" . "Named_Snaps/" . "$linesmapgame[$j].png";
 	   $newfile = "$thumbpath" . "/" . "Named_Snaps/" . "$lineslplgame[$i].png";
 	   #print "$originalfile " . "$newfile\n";
-	   if (rename $originalfile, $newfile) {
-	     print LOG "Renamed snaps png file: ". "$originalfile " . "$newfile\n";
+	   if ($originalfile ne $newfile) {
+	     if (rename $originalfile, $newfile) {
+	       print LOG "Renamed boxart snaps file: ". "$originalfile " . "$newfile\n";
+	     } else {
+	       if (-e $newfile) {
+		     print LOG "Already exists snaps png image: $newfile\n";
+		   } else {
+	   	     print LOG "Missing boxart png image: $originalfile\n";
+	       }
+	     }
 	   } else {
-	   	 print LOG "Missing snaps png image: $originalfile\n";
+	     print LOG "Already exists snaps png image: $newfile\n";
 	   }
 	   
 	   #third titles 
 	   $originalfile = "$thumbpath" . "/" . "Named_Titles/" . "$linesmapgame[$j].png";
 	   $newfile = "$thumbpath" . "/" . "Named_Titles/" . "$lineslplgame[$i].png";
 	   #print "$originalfile " . "$newfile\n";
-	   if (rename $originalfile, $newfile) {
-	     print LOG "Renamed titles png file: ". "$originalfile " . "$newfile\n";
+	   if ($originalfile ne $newfile) {
+	     if (rename $originalfile, $newfile) {
+	       print LOG "Renamed boxart titles file: ". "$originalfile " . "$newfile\n";
+	     } else {
+	       if (-e $newfile) {
+		     print LOG "Already exists titles png image: $newfile\n";
+		   } else {
+	   	     print LOG "Missing boxart titles image: $originalfile\n";
+	       }
+	     }
 	   } else {
-	   	 print LOG "Missing titles png image: $originalfile\n";
+	     print LOG "Already exists titles png image: $newfile\n";
 	   }
 	   
 	   $i++;
@@ -178,6 +201,6 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
   $i++;
 }
 close LOG;
-print "\nlog file: log.txt\n";
+print "\nlog file: log_" . "$system" . ".txt\n";
 
 
