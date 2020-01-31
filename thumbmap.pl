@@ -17,7 +17,7 @@ my @lineslplcrc32 = "";
 #check command line
 foreach my $argument (@ARGV) {
   if ($argument =~ /\Q$substringh\E/) {
-    print "thumbmap v0.6 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
+    print "thumbmap v0.7 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
 	print "                and renames your downloaded thumbnail images to match your playlist game names\n";
 	print "\n";
 	print "with thumbmap [lpl file ...] [system]";
@@ -155,7 +155,11 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
 	       }
 	     }
 	   } else {
-	     print LOG "Already exists boxart png image: $newfile\n";
+	     if (-e $newfile) {
+	       print LOG "Already exists boxart png image: $newfile\n";
+	     } else {
+		   print LOG "Missing boxart png image: $originalfile\n";
+		 }
 	   }
 	   
 	   #second snaps 
@@ -173,7 +177,11 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
 	       }
 	     }
 	   } else {
-	     print LOG "Already exists snaps png image: $newfile\n";
+	     if (-e $newfile) {
+	       print LOG "Already exists snaps png image: $newfile\n";
+	     } else {
+		   print LOG "Missing snaps png image: $originalfile\n";
+		 }
 	   }
 	   
 	   #third titles 
@@ -191,7 +199,11 @@ OUTER: foreach my $checklpl (@lineslplcrc32) {
 	       }
 	     }
 	   } else {
-	     print LOG "Already exists titles png image: $newfile\n";
+	     if (-e $newfile) {
+	       print LOG "Already exists titles png image: $newfile\n";
+	     } else {
+		   print LOG "Missing titles png image: $originalfile\n";
+		 }
 	   }
 	   
 	   $i++;
