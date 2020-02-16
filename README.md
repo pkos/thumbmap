@@ -1,5 +1,5 @@
-thumbmap v0.7 - Scans a RetroArch playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)
-                and renames your downloaded thumbnail images to match your playlist game names.
+thumbmap v0.8 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)
+                and renames your downloaded thumbnail images to match your playlist game names
 
 with thumbmap [lpl file ...] [system]
 Example:

@@ -17,7 +17,7 @@ my @lineslplcrc32 = "";
 #check command line
 foreach my $argument (@ARGV) {
   if ($argument =~ /\Q$substringh\E/) {
-    print "thumbmap v0.7 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
+    print "thumbmap v0.8 - Scans a playlist for game names and crc32 values, then compares to thumbmap.map (no-intro)\n";
 	print "                and renames your downloaded thumbnail images to match your playlist game names\n";
 	print "\n";
 	print "with thumbmap [lpl file ...] [system]";
@@ -42,6 +42,7 @@ if (scalar(@ARGV) < 2 or scalar(@ARGV) > 2) {
 $mapfile = "thumbmap.map";
 $lplfile = $ARGV[-2];
 $system = $ARGV[-1];
+$lplfile =~ s/\\/\//g; 
 
 #exit no parameters
 if ($lplfile eq "" or $system eq "") {
